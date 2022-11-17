@@ -52,9 +52,14 @@ export const useAuthStore = defineStore('auth-store', {
      * @param backendToken - 返回的token
      */
     async handleActionAfterLogin(backendToken: ApiAuth.Token) {
+      const route = useRouteStore();
       const { toLoginRedirect } = useRouterPush(false);
 
       const loginSuccess = await this.loginByToken(backendToken);
+
+      if (!route.isInitAuthRoute) {
+        await route.initAuthRoute();
+      }
 
       if (loginSuccess) {
         // 跳转登录后的地址

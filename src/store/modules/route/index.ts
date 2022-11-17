@@ -112,11 +112,14 @@ export const useRouteStore = defineStore('route-store', {
         throw new Error('userId 不能为空!');
       }
 
-      const { data } = await fetchUserRoutes(userId);
-      if (data) {
+      const { error, data } = await fetchUserRoutes(userId);
+
+      if (!error) {
         this.routeHomeName = data.home;
         this.handleUpdateRootRedirect(data.home);
         this.handleAuthRoute(data.routes);
+      } else {
+        throw new Error('动态路由数据加载失败!');
       }
     },
     /** 初始化静态路由 */
